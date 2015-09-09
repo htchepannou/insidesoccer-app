@@ -20,7 +20,7 @@ public class GetMyPostsCommand extends AbstractSearchPostCommand {
         return getHttp()
                 .withPort(getPartyPort())
                 .withHost(getPartyHostname())
-                .withPath(Constants.URI_PARTY + "/from/" + getUserId () + "/relation/member")
+                .withPath(Constants.URI_PARTY + "from/" + getUserId () + "/relation/member")
                 .get(PartyCollectionResponse.class)
                 .getParties()
                 .stream()

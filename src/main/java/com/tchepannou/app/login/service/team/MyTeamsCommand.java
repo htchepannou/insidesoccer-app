@@ -47,7 +47,7 @@ public class MyTeamsCommand extends AbstractSecuredCommand<Void, AppMyTeamsRespo
         return getHttp()
                 .withPort(partyPort)
                 .withHost(partyHostname)
-                .withPath(Constants.URI_PARTY + "/to/" + getUserId() + "/relation/child")
+                .withPath(Constants.URI_PARTY + "to/" + getUserId() + "/relation/child")
                 .get(PartyCollectionResponse.class)
                 .getParties()
         ;
