@@ -2,6 +2,7 @@ package com.tchepannou.app.login.service.blog;
 
 import com.tchepannou.app.login.client.v1.Constants;
 import com.tchepannou.app.login.client.v1.blog.AppPostCollectionResponse;
+import com.tchepannou.app.login.mapper.AppPostCollectionResponseMapper;
 import com.tchepannou.app.login.service.CommandContext;
 import com.tchepannou.app.login.service.impl.AbstractSecuredCommand;
 import com.tchepannou.blog.client.v1.PostCollectionResponse;
@@ -34,6 +35,9 @@ public abstract class AbstractSearchPostCommand extends AbstractSecuredCommand<V
     @Value("${blog.port}")
     private int blogPort;
 
+    @Value("${insidesoccer.assset_url_prefix}")
+    private String assetUrlPrefix;
+
     //-- AbstractSecuredCommand overrides
     @Override
     protected AppPostCollectionResponse doExecute(Void req, CommandContext context) throws IOException {
@@ -43,7 +47,12 @@ public abstract class AbstractSearchPostCommand extends AbstractSecuredCommand<V
 
         final Map<Long, PartyResponse> teams = getTeams(posts);
 
-        return new AppPostCollectionResponse(getTransactionInfo(), posts, teams);
+        return new AppPostCollectionResponseMapper()
+                .withAssertUrlPrefix(assetUrlPrefix)
+                .withPosts(posts)
+                .withTransactionInfo(getTransactionInfo())
+                .withTeams(teams)
+                .map();
     }
 
     //-- Protected
