@@ -4,31 +4,24 @@ import com.tchepannou.app.login.client.v1.Constants;
 import com.tchepannou.app.login.client.v1.team.AppTeamResponse;
 import com.tchepannou.app.login.exception.NotFoundException;
 import com.tchepannou.app.login.service.CommandContext;
+import com.tchepannou.app.login.service.PartyService;
 import com.tchepannou.app.login.service.impl.AbstractSecuredCommand;
 import com.tchepannou.core.http.HttpException;
 import com.tchepannou.party.client.v1.PartyResponse;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
 public class GetTeamProfile extends AbstractSecuredCommand<Void, AppTeamResponse> {
     //-- Attributes
-    @Value("${party.hostname}")
-    private String partyHostname;
-
-    @Value("${party.port}")
-    private int partyPort;
+    @Autowired
+    private PartyService partyService;
 
     //-- AbstractSecuredCommand overrides
     @Override
     protected AppTeamResponse doExecute(Void request, CommandContext context) throws IOException {
         try {
-            PartyResponse response = getHttp()
-                    .withPort(partyPort)
-                    .withHost(partyHostname)
-                    .withPath(Constants.URI_PARTY + context.getId())
-                    .get(PartyResponse.class);
-
+            PartyResponse response = partyService.get(context.getId(), context);
             return new AppTeamResponse(getTransactionInfo(), response);
         } catch (HttpException e){
             final int status = e.getStatus();

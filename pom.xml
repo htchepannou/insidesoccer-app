@@ -28,6 +28,11 @@
             <artifactId>blog-client</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.tchepannou.event</groupId>
+            <artifactId>event-client</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

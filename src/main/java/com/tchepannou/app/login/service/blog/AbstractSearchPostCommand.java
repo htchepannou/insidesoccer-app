@@ -1,21 +1,18 @@
 package com.tchepannou.app.login.service.blog;
 
-import com.tchepannou.app.login.client.v1.Constants;
 import com.tchepannou.app.login.client.v1.blog.AppPostCollectionResponse;
 import com.tchepannou.app.login.mapper.AppPostCollectionResponseMapper;
+import com.tchepannou.app.login.service.BlogService;
 import com.tchepannou.app.login.service.CommandContext;
+import com.tchepannou.app.login.service.PartyService;
 import com.tchepannou.app.login.service.impl.AbstractSecuredCommand;
-import com.tchepannou.blog.client.v1.PostCollectionResponse;
 import com.tchepannou.blog.client.v1.PostResponse;
 import com.tchepannou.blog.client.v1.SearchRequest;
-import com.tchepannou.core.http.Http;
-import com.tchepannou.party.client.v1.PartyCollectionRequest;
-import com.tchepannou.party.client.v1.PartyCollectionResponse;
 import com.tchepannou.party.client.v1.PartyResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,29 +20,24 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractSearchPostCommand extends AbstractSecuredCommand<Void, AppPostCollectionResponse> {
     //-- Attributes
-    @Value("${party.hostname}")
-    private String partyHostname;
+    @Autowired
+    private PartyService partyService;
 
-    @Value("${party.port}")
-    private int partyPort;
-
-    @Value("${blog.hostname}")
-    private String blogHostname;
-
-    @Value("${blog.port}")
-    private int blogPort;
+    @Autowired
+    private BlogService blogService;
 
     @Value("${insidesoccer.assset_url_prefix}")
     private String assetUrlPrefix;
+
 
     //-- AbstractSecuredCommand overrides
     @Override
     protected AppPostCollectionResponse doExecute(Void req, CommandContext context) throws IOException {
         final SearchRequest request = createSearchRequest(context);
 
-        final List<PostResponse> posts = getPosts(request);
+        final List<PostResponse> posts = blogService.search(request, context).getPosts();
 
-        final Map<Long, PartyResponse> teams = getTeams(posts);
+        final Map<Long, PartyResponse> teams = getTeams(posts, context);
 
         return new AppPostCollectionResponseMapper()
                 .withAssertUrlPrefix(assetUrlPrefix)
@@ -70,48 +62,17 @@ public abstract class AbstractSearchPostCommand extends AbstractSecuredCommand<V
 
 
     //-- Getter
-    public String getPartyHostname() {
-        return partyHostname;
-    }
-
-    public int getPartyPort() {
-        return partyPort;
-    }
-
-    public String getBlogHostname() {
-        return blogHostname;
-    }
-
-    public int getBlogPort() {
-        return blogPort;
+    public PartyService getPartyService() {
+        return partyService;
     }
 
     //-- Private
-    private List<PostResponse> getPosts (final SearchRequest request) throws IOException{
-        return getHttp()
-                .header(Http.HEADER_ACCESS_TOKEN, getAccessToken().getId())
-                .withHost(blogHostname)
-                .withPort(blogPort)
-                .withPath(Constants.URI_BLOG + "search")
-                .withPayload(request)
-                .post(PostCollectionResponse.class)
-                .getPosts()
-        ;
-    }
-
-    private Map<Long, PartyResponse> getTeams (final List<PostResponse> posts) throws IOException {
+    private Map<Long, PartyResponse> getTeams (final List<PostResponse> posts, final CommandContext context) throws IOException {
         final Set<Long> ids = posts.stream()
                 .map(post -> post.getBlogId())
                 .collect(Collectors.toSet());
 
-        PartyCollectionRequest request = new PartyCollectionRequest();
-        request.setIds(new ArrayList<>(ids));
-        return getHttp()
-                .withHost(partyHostname)
-                .withPort(partyPort)
-                .withPath(Constants.URI_PARTY + "list")
-                .withPayload(request)
-                .post(PartyCollectionResponse.class)
+        return getPartyService().teamsByIds(ids, context)
                 .getParties()
                 .stream()
                 .collect(Collectors.toMap(p -> p.getId(), p -> p))

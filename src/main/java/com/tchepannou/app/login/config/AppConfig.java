@@ -1,7 +1,15 @@
 package com.tchepannou.app.login.config;
 
+import com.tchepannou.app.login.service.AccessTokenService;
+import com.tchepannou.app.login.service.AuthService;
+import com.tchepannou.app.login.service.BlogService;
+import com.tchepannou.app.login.service.PartyService;
 import com.tchepannou.app.login.service.blog.GetMyPostsCommand;
 import com.tchepannou.app.login.service.blog.GetTeamPostsCommand;
+import com.tchepannou.app.login.service.impl.AccessTokenServiceImpl;
+import com.tchepannou.app.login.service.impl.AuthServiceImpl;
+import com.tchepannou.app.login.service.impl.BlogServiceImpl;
+import com.tchepannou.app.login.service.impl.PartyServiceImpl;
 import com.tchepannou.app.login.service.login.LoginCommand;
 import com.tchepannou.app.login.service.login.LogoutCommand;
 import com.tchepannou.app.login.service.profile.GetProfileCommand;
@@ -28,6 +36,7 @@ public class AppConfig {
         return cnn;
     }
 
+    //-- Service
     @Bean
     HttpClient httpClient () {
         return HttpClients.custom()
@@ -41,6 +50,28 @@ public class AppConfig {
             .build();
     }
 
+    @Bean
+    AccessTokenService accessTokenService (){
+        return new AccessTokenServiceImpl();
+    }
+
+    @Bean
+    AuthService authService (){
+        return new AuthServiceImpl();
+    }
+
+    @Bean
+    BlogService blogService () {
+        return new BlogServiceImpl();
+    }
+
+    @Bean
+    PartyService partyService (){
+        return new PartyServiceImpl();
+    }
+
+
+    //-- Commands
     @Bean
     LoginCommand loginCommand(){
         return new LoginCommand();
