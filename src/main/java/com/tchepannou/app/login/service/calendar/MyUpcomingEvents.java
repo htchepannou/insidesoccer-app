@@ -1,4 +1,4 @@
-package com.tchepannou.app.login.service.blog;
+package com.tchepannou.app.login.service.calendar;
 
 import com.tchepannou.app.login.service.CommandContext;
 import com.tchepannou.party.client.v1.PartyResponse;
@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Scope(value = WebApplicationContext.SCOPE_REQUEST)
-public class GetMyPostsCommand extends AbstractSearchPostCommand {
-
-    //-- AbstractSearchPostCommand overrides
+public class MyUpcomingEvents extends AbstractUpcomingEvents {
     @Override
     protected List<Long> getTeamIds (CommandContext context) throws IOException {
         return getPartyService().teamsByUser(getUserId(), context)

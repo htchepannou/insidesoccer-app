@@ -63,7 +63,7 @@ public class AbstractController {
 
     @ResponseStatus(value= HttpStatus.CONFLICT)
     @ExceptionHandler(IOException.class)
-    public ErrorResponse ioError(final HTTPException exception, final HttpServletRequest request) {
+    public ErrorResponse ioError(final IOException exception, final HttpServletRequest request) {
         getLogger().error("{} - IO error", request.getRequestURI(), exception);
 
         return createErrorResponse(HttpStatus.CONFLICT.value(), Constants.ERROR_IO, request);

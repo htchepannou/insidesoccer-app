@@ -2,20 +2,16 @@ package com.tchepannou.app.login.service.impl;
 
 import com.tchepannou.app.login.service.CommandContext;
 import com.tchepannou.app.login.service.PartyService;
-import com.tchepannou.core.http.Http;
 import com.tchepannou.party.client.v1.PartyCollectionRequest;
 import com.tchepannou.party.client.v1.PartyCollectionResponse;
 import com.tchepannou.party.client.v1.PartyResponse;
-import org.apache.http.client.HttpClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class PartyServiceImpl implements PartyService{
+public class PartyServiceImpl extends AbstractHttpService implements PartyService{
     //-- Attributes
     public static final String PATH_PREFIX = "/v1/party/";
     
@@ -24,12 +20,6 @@ public class PartyServiceImpl implements PartyService{
 
     @Value("${party.port}")
     private int port;
-
-    @Autowired
-    private HttpClient httpClient;
-
-    @Autowired
-    private Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder;
 
 
     //-- PartyService overrides
@@ -67,14 +57,14 @@ public class PartyServiceImpl implements PartyService{
         ;
     }
 
-    //-- Private
-    private Http createHttp (final CommandContext context){
-        return new Http()
-                .withHttpClient(httpClient)
-                .header(Http.HEADER_ACCESS_TOKEN, context.getAccessTokenId())
-                .header(Http.HEADER_TRANSACTION_ID, context.getTransactionId())
-                .withObjectMapper(jackson2ObjectMapperBuilder.build())
-                .withPort(port)
-                .withHost(hostname);
+
+    //-- AbstractHttpService overrides
+    @Override protected String getHostname() {
+        return hostname;
     }
+
+    @Override protected int getPort() {
+        return port;
+    }
+
 }

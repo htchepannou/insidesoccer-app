@@ -1,4 +1,4 @@
-package com.tchepannou.app.login.service.blog;
+package com.tchepannou.app.login.service.calendar;
 
 import com.tchepannou.app.login.service.CommandContext;
 import org.springframework.context.annotation.Scope;
@@ -9,11 +9,9 @@ import java.util.Collections;
 import java.util.List;
 
 @Scope(value = WebApplicationContext.SCOPE_REQUEST)
-public class GetTeamPostsCommand extends AbstractSearchPostCommand {
-    //-- AbstractSecuredCommand overrides
+public class TeamUpcomingEvents extends AbstractUpcomingEvents {
     @Override
     protected List<Long> getTeamIds (CommandContext context) throws IOException {
         return Collections.singletonList(context.getId());
-
     }
 }

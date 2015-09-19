@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
-public class GetTeamProfile extends AbstractSecuredCommand<Void, AppTeamResponse> {
+public class TeamProfileCommand extends AbstractSecuredCommand<Void, AppTeamResponse> {
     //-- Attributes
     @Autowired
     private PartyService partyService;

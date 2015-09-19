@@ -2,7 +2,7 @@ package com.tchepannou.app.login.controller;
 
 import com.tchepannou.app.login.client.v1.Constants;
 import com.tchepannou.app.login.client.v1.profile.AppProfileResponse;
-import com.tchepannou.app.login.service.profile.GetProfileCommand;
+import com.tchepannou.app.login.service.profile.MyProfileCommand;
 import com.tchepannou.core.http.Http;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @RequestMapping(value="/v1/app/profile", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProfileController extends AbstractController {
     @Autowired
-    private GetProfileCommand getProfileCommand;
+    private MyProfileCommand getProfileCommand;
 
     //-- REST methods
     @RequestMapping(method = RequestMethod.GET)

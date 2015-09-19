@@ -30,6 +30,9 @@ public abstract class AbstractSearchPostCommand extends AbstractSecuredCommand<V
     private String assetUrlPrefix;
 
 
+    //-- Abstract
+    protected abstract List<Long> getTeamIds (final CommandContext context) throws IOException;
+
     //-- AbstractSecuredCommand overrides
     @Override
     protected AppPostCollectionResponse doExecute(Void req, CommandContext context) throws IOException {
@@ -47,8 +50,14 @@ public abstract class AbstractSearchPostCommand extends AbstractSecuredCommand<V
                 .map();
     }
 
-    //-- Protected
-    protected SearchRequest createSearchRequest (final CommandContext context) throws IOException {
+
+    //-- Getter
+    public PartyService getPartyService() {
+        return partyService;
+    }
+
+    //-- Private
+    private SearchRequest createSearchRequest (final CommandContext context) throws IOException {
         final SearchRequest request = new SearchRequest();
         request.setStatus("published");
         request.setBlogIds(getTeamIds(context));
@@ -58,15 +67,6 @@ public abstract class AbstractSearchPostCommand extends AbstractSecuredCommand<V
         return request;
     }
 
-    protected abstract List<Long> getTeamIds (final CommandContext context) throws IOException;
-
-
-    //-- Getter
-    public PartyService getPartyService() {
-        return partyService;
-    }
-
-    //-- Private
     private Map<Long, PartyResponse> getTeams (final List<PostResponse> posts, final CommandContext context) throws IOException {
         final Set<Long> ids = posts.stream()
                 .map(post -> post.getBlogId())

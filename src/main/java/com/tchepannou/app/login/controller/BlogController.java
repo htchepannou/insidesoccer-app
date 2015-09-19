@@ -2,8 +2,8 @@ package com.tchepannou.app.login.controller;
 
 import com.tchepannou.app.login.client.v1.Constants;
 import com.tchepannou.app.login.client.v1.blog.AppPostCollectionResponse;
-import com.tchepannou.app.login.service.blog.GetTeamPostsCommand;
-import com.tchepannou.app.login.service.blog.GetMyPostsCommand;
+import com.tchepannou.app.login.service.blog.TeamPostsCommand;
+import com.tchepannou.app.login.service.blog.MyPostsCommand;
 import com.tchepannou.core.http.Http;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -25,19 +25,19 @@ import java.io.IOException;
 @RequestMapping(value="/v1/app/blog", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BlogController extends AbstractController {
     @Autowired
-    private GetMyPostsCommand getMyPostsCommand;
+    private MyPostsCommand getMyPostsCommand;
 
     @Autowired
-    private GetTeamPostsCommand getTeamPostsCommand;
+    private TeamPostsCommand getTeamPostsCommand;
 
     //-- REST methods
-    @RequestMapping(method = RequestMethod.GET, value="/my-posts")
+    @RequestMapping(method = RequestMethod.GET, value="/posts")
     @ApiOperation("Returns user posts")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 401, message = Constants.ERROR_AUTH_FAILED),
     })
-    public AppPostCollectionResponse me(
+    public AppPostCollectionResponse myPosts(
             @RequestHeader(value= Http.HEADER_ACCESS_TOKEN) String accessToken,
             @RequestParam(defaultValue = "30") int limit,
             @RequestHeader(defaultValue = "0") int offset
@@ -56,7 +56,7 @@ public class BlogController extends AbstractController {
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 401, message = Constants.ERROR_AUTH_FAILED),
     })
-    public AppPostCollectionResponse team(
+    public AppPostCollectionResponse teamPosts(
             @RequestHeader(value= Http.HEADER_ACCESS_TOKEN) String accessToken,
             @PathVariable long teamId,
             @RequestParam(defaultValue = "30") int limit,

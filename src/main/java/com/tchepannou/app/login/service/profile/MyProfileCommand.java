@@ -15,12 +15,12 @@ import org.springframework.web.context.WebApplicationContext;
 import java.io.IOException;
 
 @Scope(value = WebApplicationContext.SCOPE_REQUEST)
-public class GetProfileCommand extends AbstractSecuredCommand<Void, AppProfileResponse> {
+public class MyProfileCommand extends AbstractSecuredCommand<Void, AppProfileResponse> {
     //-- Attributes
     @Autowired
     private PartyService partyService;
 
-    //-- GetProfileCommand overrides
+    //-- MyProfileCommand overrides
     @Override
     protected AppProfileResponse doExecute(Void request, CommandContext context) throws IOException {
         try {

@@ -3,18 +3,22 @@ package com.tchepannou.app.login.config;
 import com.tchepannou.app.login.service.AccessTokenService;
 import com.tchepannou.app.login.service.AuthService;
 import com.tchepannou.app.login.service.BlogService;
+import com.tchepannou.app.login.service.CalendarService;
 import com.tchepannou.app.login.service.PartyService;
-import com.tchepannou.app.login.service.blog.GetMyPostsCommand;
-import com.tchepannou.app.login.service.blog.GetTeamPostsCommand;
+import com.tchepannou.app.login.service.blog.MyPostsCommand;
+import com.tchepannou.app.login.service.blog.TeamPostsCommand;
+import com.tchepannou.app.login.service.calendar.MyUpcomingEvents;
+import com.tchepannou.app.login.service.calendar.TeamUpcomingEvents;
 import com.tchepannou.app.login.service.impl.AccessTokenServiceImpl;
 import com.tchepannou.app.login.service.impl.AuthServiceImpl;
 import com.tchepannou.app.login.service.impl.BlogServiceImpl;
+import com.tchepannou.app.login.service.impl.CalendarServiceImpl;
 import com.tchepannou.app.login.service.impl.PartyServiceImpl;
 import com.tchepannou.app.login.service.login.LoginCommand;
 import com.tchepannou.app.login.service.login.LogoutCommand;
-import com.tchepannou.app.login.service.profile.GetProfileCommand;
-import com.tchepannou.app.login.service.team.GetTeamProfile;
+import com.tchepannou.app.login.service.profile.MyProfileCommand;
 import com.tchepannou.app.login.service.team.MyTeamsCommand;
+import com.tchepannou.app.login.service.team.TeamProfileCommand;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.HttpClientConnectionManager;
@@ -66,44 +70,56 @@ public class AppConfig {
     }
 
     @Bean
+    CalendarService calendarService () {
+        return new CalendarServiceImpl();
+    }
+
+    @Bean
     PartyService partyService (){
         return new PartyServiceImpl();
     }
 
 
-    //-- Commands
-    @Bean
-    LoginCommand loginCommand(){
+    //-- AuthCommand
+    @Bean LoginCommand loginCommand(){
         return new LoginCommand();
     }
 
-    @Bean
-    LogoutCommand logoutCommand(){
+    @Bean LogoutCommand logoutCommand(){
         return new LogoutCommand();
     }
 
-    @Bean
-    GetProfileCommand getProfileCommand(){
-        return new GetProfileCommand();
+
+    //-- Event Commands
+    @Bean MyUpcomingEvents myUpcomingEvents (){
+        return new MyUpcomingEvents();
     }
 
-    @Bean
-    MyTeamsCommand myTeamsCommand(){
+    @Bean TeamUpcomingEvents teamUpcomingEvents (){
+        return new TeamUpcomingEvents();
+    }
+
+
+    //-- Party commands
+    @Bean TeamProfileCommand getTeamProfile() {
+        return new TeamProfileCommand();
+    }
+
+    @Bean MyProfileCommand getProfileCommand(){
+        return new MyProfileCommand();
+    }
+
+    @Bean MyTeamsCommand myTeamsCommand(){
         return new MyTeamsCommand();
     }
 
-    @Bean
-    GetTeamProfile getTeamProfile() {
-        return new GetTeamProfile();
+
+    //-- Post command
+    @Bean MyPostsCommand getMyPostsCommand() {
+        return new MyPostsCommand();
     }
 
-    @Bean
-    GetMyPostsCommand getMyPostsCommand() {
-        return new GetMyPostsCommand();
-    }
-
-    @Bean
-    GetTeamPostsCommand getTeamPostsCommand (){
-        return new GetTeamPostsCommand();
+    @Bean TeamPostsCommand getTeamPostsCommand (){
+        return new TeamPostsCommand();
     }
 }
