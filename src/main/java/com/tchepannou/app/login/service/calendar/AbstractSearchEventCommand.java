@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractSearchEventCommand extends AbstractSecuredCommand<Void, AppEventCollectionResponse> {
     //-- Attributes
-    public static final String DATE_FORMAT = "yyyy/MM/dd";
-
     @Autowired
     private PartyService partyService;
 

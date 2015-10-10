@@ -1,9 +1,8 @@
 package com.tchepannou.app.login.controller;
 
-import com.tchepannou.app.login.client.v1.Constants;
 import com.tchepannou.app.login.client.v1.blog.AppPostCollectionResponse;
-import com.tchepannou.app.login.service.blog.TeamPostsCommand;
 import com.tchepannou.app.login.service.blog.MyPostsCommand;
+import com.tchepannou.app.login.service.blog.TeamPostsCommand;
 import com.tchepannou.core.http.Http;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -25,24 +24,24 @@ import java.io.IOException;
 @RequestMapping(value="/v1/app/blog", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BlogController extends AbstractController {
     @Autowired
-    private MyPostsCommand getMyPostsCommand;
+    private TeamPostsCommand teamPostsCommand;
 
     @Autowired
-    private TeamPostsCommand getTeamPostsCommand;
+    private MyPostsCommand myPostsCommand;
 
     //-- REST methods
-    @RequestMapping(method = RequestMethod.GET, value="/posts")
-    @ApiOperation("Returns user posts")
+    @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation("Returns a user's posts")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = Constants.ERROR_AUTH_FAILED),
+            @ApiResponse(code = 401, message = "Login required")
     })
-    public AppPostCollectionResponse myPosts(
+    public AppPostCollectionResponse me(
             @RequestHeader(value= Http.HEADER_ACCESS_TOKEN) String accessToken,
-            @RequestParam(defaultValue = "30") int limit,
+            @RequestParam(defaultValue = "20") int limit,
             @RequestHeader(defaultValue = "0") int offset
     ) throws IOException {
-        return getMyPostsCommand.execute(null,
+        return myPostsCommand.execute(null,
                 new CommandContextImpl()
                         .withAccessTokenId(accessToken)
                         .withLimit(limit)
@@ -50,25 +49,22 @@ public class BlogController extends AbstractController {
         );
     }
 
-    @RequestMapping(method = RequestMethod.GET, value="/{teamId}/posts")
-    @ApiOperation("Returns team posts")
+    @RequestMapping(method = RequestMethod.GET, value="/{bid}")
+    @ApiOperation("Returns a team's posts")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = Constants.ERROR_AUTH_FAILED),
+            @ApiResponse(code = 200, message = "Success")
     })
-    public AppPostCollectionResponse teamPosts(
+    public AppPostCollectionResponse team(
             @RequestHeader(value= Http.HEADER_ACCESS_TOKEN) String accessToken,
-            @PathVariable long teamId,
-            @RequestParam(defaultValue = "30") int limit,
+            @PathVariable long bid,
+            @RequestParam(defaultValue = "20") int limit,
             @RequestHeader(defaultValue = "0") int offset
     ) throws IOException {
-        return getTeamPostsCommand.execute(null,
+        return teamPostsCommand.execute(bid,
                 new CommandContextImpl()
                         .withAccessTokenId(accessToken)
-                        .withId(teamId)
                         .withLimit(limit)
                         .withOffset(offset)
         );
     }
-
 }

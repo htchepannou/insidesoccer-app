@@ -5,7 +5,7 @@ import com.tchepannou.event.client.v1.SearchRequest;
 
 import java.io.IOException;
 
-public abstract class AbstractUpcomingEvents extends AbstractSearchEventCommand {
+public abstract class AbstractUpcomingEventsCommand extends AbstractSearchEventCommand {
     protected SearchRequest createSearchRequest (final CommandContext context) throws IOException {
         final SearchRequest request = new SearchRequest();
         request.setCalendarIds(getTeamIds(context));

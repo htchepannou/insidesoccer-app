@@ -7,8 +7,9 @@ import com.tchepannou.app.login.service.CalendarService;
 import com.tchepannou.app.login.service.PartyService;
 import com.tchepannou.app.login.service.blog.MyPostsCommand;
 import com.tchepannou.app.login.service.blog.TeamPostsCommand;
-import com.tchepannou.app.login.service.calendar.MyUpcomingEvents;
-import com.tchepannou.app.login.service.calendar.TeamUpcomingEvents;
+import com.tchepannou.app.login.service.calendar.GetEventCommand;
+import com.tchepannou.app.login.service.calendar.MyUpcomingEventsCommand;
+import com.tchepannou.app.login.service.calendar.TeamUpcomingEventsCommand;
 import com.tchepannou.app.login.service.impl.AccessTokenServiceImpl;
 import com.tchepannou.app.login.service.impl.AuthServiceImpl;
 import com.tchepannou.app.login.service.impl.BlogServiceImpl;
@@ -91,12 +92,17 @@ public class AppConfig {
 
 
     //-- Event Commands
-    @Bean MyUpcomingEvents myUpcomingEvents (){
-        return new MyUpcomingEvents();
+    @Bean MyUpcomingEventsCommand myUpcomingEvents (){
+        return new MyUpcomingEventsCommand();
     }
 
-    @Bean TeamUpcomingEvents teamUpcomingEvents (){
-        return new TeamUpcomingEvents();
+    @Bean TeamUpcomingEventsCommand teamUpcomingEvents (){
+        return new TeamUpcomingEventsCommand();
+    }
+
+    @Bean
+    GetEventCommand getEventCommand() {
+        return new GetEventCommand();
     }
 
 
@@ -115,11 +121,11 @@ public class AppConfig {
 
 
     //-- Post command
-    @Bean MyPostsCommand getMyPostsCommand() {
+    @Bean MyPostsCommand myPostsCommand() {
         return new MyPostsCommand();
     }
 
-    @Bean TeamPostsCommand getTeamPostsCommand (){
+    @Bean TeamPostsCommand teamPostsCommand() {
         return new TeamPostsCommand();
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Scope(value = WebApplicationContext.SCOPE_REQUEST)
-public class MyUpcomingEvents extends AbstractUpcomingEvents {
+public class MyUpcomingEventsCommand extends AbstractUpcomingEventsCommand {
     @Override
     protected List<Long> getTeamIds (CommandContext context) throws IOException {
         return getPartyService().teamsByUser(getUserId(), context)

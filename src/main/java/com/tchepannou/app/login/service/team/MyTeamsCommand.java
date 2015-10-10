@@ -38,14 +38,4 @@ public class MyTeamsCommand extends AbstractSecuredCommand<Void, AppMyTeamsRespo
                 .withTeamsByChild(teamsByChild)
                 .map();
     }
-
-    private int occurence(final PartyResponse team, final Map<PartyResponse, List<PartyResponse>> teamsByChildren){
-        int value = 0;
-        for (final List<PartyResponse> teams : teamsByChildren.values()){
-            if (teams.contains(team)){
-                value++;
-            }
-        }
-        return value;
-    }
 }

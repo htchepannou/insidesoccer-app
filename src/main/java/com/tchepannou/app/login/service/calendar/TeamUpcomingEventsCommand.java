@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Scope(value = WebApplicationContext.SCOPE_REQUEST)
-public class TeamUpcomingEvents extends AbstractUpcomingEvents {
+public class TeamUpcomingEventsCommand extends AbstractUpcomingEventsCommand {
     @Override
     protected List<Long> getTeamIds (CommandContext context) throws IOException {
         return Collections.singletonList(context.getId());
